@@ -1,0 +1,12 @@
+[Unit]
+Description=Monitor Button for Shutdown
+After=network.target
+
+[Service]
+Type=simple
+ExecStart=/usr/bin/python3 /home/wall-e/shutdown_button.py
+Restart=always
+User=wall-e
+
+[Install]
+WantedBy=multi-user.target

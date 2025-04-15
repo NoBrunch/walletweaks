@@ -1,0 +1,9 @@
+make executable
+chmod +x ~/shutdown_button.py
+
+install dependencies
+sudo apt install python3-rpi.gpio
+
+grant shutdown permissions
+sudo visudo -f /etc/sudoers.d/shutdown
+

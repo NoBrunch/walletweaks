@@ -1,0 +1,16 @@
+path is /home/wall-e/walle-replica/web_interface/os_led.py
+
+make executable 
+chmod +x ~/walle-replica/web_interface/os_led.py
+
+update walle.service
+sudo nano /etc/systemd/system/walle.service <-- copy over walle.service
+
+reload and test
+sudo systemctl daemon-reload
+sudo systemctl restart walle.service
+
+
+
+
+

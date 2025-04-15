@@ -1,0 +1,12 @@
+located in root /etc/system/system
+
+calls to home/wall-e/shutdown_button.py
+
+enable and start
+
+sudo systemctl enable shutdown-button.service
+sudo systemctl start shutdown-button.service
+
+verify
+
+sudo systemctl status shutdown-button.service

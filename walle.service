@@ -1,0 +1,17 @@
+[Unit]
+Description=Wall-E Web Interface
+After=multi-user.target network.target sound.target
+
+[Service]
+Type=simple
+WorkingDirectory=/home/wall-e/walle-replica/web_interface
+ExecStart=/usr/bin/python3 app.py
+ExecStartPre=/usr/bin/python3 /home/wall-e/walle-replica/web_interface/os_led.py
+KillSignal=SIGINT
+Restart=on-failure
+Environment=XDG_RUNTIME_DIR=/run/user/1000
+User=wall-e
+Group=wall-e
+
+[Install]
+WantedBy=multi-user.target
