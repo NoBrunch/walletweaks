@@ -1,0 +1,23 @@
+2025-04-15 22:37:36,952 Starting: Waiting for Chromium and page load...
+2025-04-15 22:37:37,034 Found Chromium process: chromium
+2025-04-15 22:37:37,034 Chromium detected.
+2025-04-15 22:37:37,056 Starting new HTTP connection (1): localhost:5000
+2025-04-15 22:37:37,096 http://localhost:5000 "GET / HTTP/1.1" 200 24838
+2025-04-15 22:37:37,100 Page accessible: HTTP 200
+2025-04-15 22:37:37,101 Chromium and page loaded.
+2025-04-15 22:41:11,008 Starting: Waiting for Chromium and page load...
+2025-04-15 22:41:11,121 Found Chromium process: chromium
+2025-04-15 22:41:11,122 Chromium detected.
+2025-04-15 22:41:11,178 Starting new HTTP connection (1): localhost:5000
+2025-04-15 22:41:11,189 Page check attempt 1 failed: HTTPConnectionPool(host='localhost', port=5000): Max retries exceeded with url: / (Caused by NewConnectionError('<urllib3.connection.HTTPConnection object at 0x7f82427a50>: Failed to establish a new connection: [Errno 111] Connection refused'))
+2025-04-15 22:41:13,195 Starting new HTTP connection (1): localhost:5000
+2025-04-15 22:41:13,602 http://localhost:5000 "GET / HTTP/1.1" 200 24838
+2025-04-15 22:41:13,607 Page accessible: HTTP 200
+2025-04-15 22:41:13,608 Chromium and page loaded.
+2025-04-15 22:47:41,434 Starting: Waiting for Chromium and page load...
+2025-04-15 22:47:41,523 Found Chromium process: chromium
+2025-04-15 22:47:41,524 Chromium detected.
+2025-04-15 22:47:41,543 Starting new HTTP connection (1): localhost:5000
+2025-04-15 22:47:41,577 http://localhost:5000 "GET / HTTP/1.1" 200 24838
+2025-04-15 22:47:41,583 Page accessible: HTTP 200
+2025-04-15 22:47:41,583 Chromium and page loaded.
