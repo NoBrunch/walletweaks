@@ -1,0 +1,66 @@
+import RPi.GPIO as GPIO
+import time
+import psutil
+import requests
+import logging
+
+# Setup logging
+logging.basicConfig(filename='/home/wall-e/browser_load_led.log', level=logging.DEBUG, format='%(asctime)s %(message)s')
+
+# Setup GPIO13 for LED
+logging.info("Setting up GPIO13 (BCM)")
+GPIO.setmode(GPIO.BCM)
+GPIO.setup(13, GPIO.OUT)
+GPIO.output(13, GPIO.LOW)
+logging.info("GPIO13 initialized: LOW")
+
+def is_chromium_running():
+    """Check if Chromium is running."""
+    chromium_names = ['chromium', 'chromium-browser', 'chrome']
+    for proc in psutil.process_iter(['name']):
+        if proc.info['name'] in chromium_names:
+            logging.info(f"Found Chromium process: {proc.info['name']}")
+            return True
+    logging.debug("No Chromium process found.")
+    return False
+
+def check_page_load():
+    """Check if page is fully loaded via Flask endpoint."""
+    try:
+        response = requests.get('http://localhost:5000/check_page_loaded', timeout=5)
+        logging.info(f"Check page: Status {response.status_code}")
+        if response.status_code == 200:
+            data = response.json()
+            if data.get('loaded'):
+                logging.info("Page fully loaded: Endpoint confirmed")
+                time.sleep(5)  # Fallback delay for rendering
+                return True
+            logging.debug("Page not yet loaded: Endpoint reports false")
+        else:
+            logging.debug(f"Check page failed: HTTP {response.status_code}")
+    except requests.RequestException as e:
+        logging.debug(f"Check page failed: {e}")
+    return False
+
+def main():
+    try:
+        logging.info("Starting: Waiting for Chromium and page load...")
+        start_time = time.time()
+        for _ in range(180):
+            if is_chromium_running() and check_page_load():
+                elapsed = time.time() - start_time
+                logging.info(f"Chromium and page loaded after {elapsed:.1f}s")
+                logging.info("Setting GPIO13 to HIGH")
+                GPIO.output(13, GPIO.HIGH)
+                logging.info("GPIO13 set to HIGH, LED should be on")
+                while True:
+                    time.sleep(60)
+            time.sleep(1)
+        elapsed = time.time() - start_time
+        logging.error(f"Timeout after {elapsed:.1f}s: Chromium or page not loaded.")
+
+    except Exception as e:
+        logging.error(f"Error: {e}")
+
+if __name__ == "__main__":
+    main()
