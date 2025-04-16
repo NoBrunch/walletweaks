@@ -33,6 +33,7 @@ def check_page_load():
             data = response.json()
             if data.get('loaded'):
                 logging.info("Page fully loaded: Endpoint confirmed")
+                time.sleep(5)  # Fallback delay for rendering
                 return True
             logging.debug("Page not yet loaded: Endpoint reports false")
         else:
