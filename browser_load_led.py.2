@@ -1,0 +1,60 @@
+import RPi.GPIO as GPIO
+import time
+import psutil
+import requests
+import logging
+
+# Setup logging
+logging.basicConfig(filename='/home/wall-e/browser_load_led.log', level=logging.DEBUG, format='%(asctime)s %(message)s')
+
+# Setup GPIO13 for LED
+GPIO.setmode(GPIO.BCM)
+GPIO.setup(13, GPIO.OUT)
+GPIO.output(13, GPIO.LOW)  # LED off initially
+
+def is_chromium_running():
+    """Check if Chromium is running and log process names."""
+    chromium_names = ['chromium-browser', 'chromium', 'chrome']  # Possible names
+    for proc in psutil.process_iter(['name']):
+        if proc.info['name'] in chromium_names:
+            logging.info(f"Found Chromium process: {proc.info['name']}")
+            return True
+    logging.debug("No Chromium process found.")
+    return False
+
+def check_page_load():
+    """Check if page is accessible with retries."""
+    for attempt in range(3):  # Retry 3 times
+        try:
+            response = requests.get('http://localhost:5000', timeout=5)
+            if response.status_code == 200:
+                logging.info("Page accessible: HTTP 200")
+                return True
+            logging.debug(f"Page check failed: HTTP {response.status_code}")
+        except requests.RequestException as e:
+            logging.debug(f"Page check attempt {attempt + 1} failed: {e}")
+        time.sleep(2)  # Wait before retry
+    return False
+
+def main():
+    try:
+        # Wait for Chromium and page load (up to 120s)
+        logging.info("Starting: Waiting for Chromium and page load...")
+        for _ in range(120):  # Extended timeout
+            if is_chromium_running():
+                logging.info("Chromium detected.")
+                if check_page_load():
+                    logging.info("Chromium and page loaded.")
+                    GPIO.output(13, GPIO.HIGH)  # Turn on LED
+                    return
+                logging.debug("Chromium running but page not loaded yet.")
+            time.sleep(1)
+        logging.error("Timeout: Chromium or page not loaded.")
+
+    except Exception as e:
+        logging.error(f"Error: {e}")
+    finally:
+        GPIO.cleanup()
+
+if __name__ == "__main__":
+    main()
